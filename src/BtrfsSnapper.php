@@ -139,7 +139,7 @@ class BtrfsSnapper
 
         // $exe = "btrfs send -p {$snapFolder}/{$snapNameParent} {$snapFolder}/{$snapName} | ssh m.nora.pl -p 44224 'tee {$backupFolder}/{$snapNameParent}_{$snapName}.btrfs | btrfs receive {$backupFolder}' ";
 
-        $exe = "btrfs send {$snapNameParentFull} $snapNameFull | {$targetExe} 'tee {$this->target->path}/{$snapFileName} | {$targetUnpack}'";
+        $exe = "btrfs send {$snapNameParentFull} {$snapNameFull} | {$targetExe} 'tee {$this->target->path}/{$snapFileName} | {$targetUnpack}'";
 
         echo $exe.PHP_EOL;
 
