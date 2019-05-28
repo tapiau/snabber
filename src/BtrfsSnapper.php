@@ -14,6 +14,7 @@ class BtrfsSnapper
     public $snapDirDefault = '.snap';
     public $snapDir = null;
     public $snapName;
+    public $forceFullDump = false;
 
     public function setSource($string)
     {
@@ -45,6 +46,12 @@ class BtrfsSnapper
         }
 
         $this->snapDir = $string;
+    }
+    public function setForceFullDump(bool $force)
+    {
+        $this->forceFullDump = $force;
+
+        return $this;
     }
     public function setTarget($url)
     {
@@ -116,7 +123,7 @@ class BtrfsSnapper
 //        $targetUnpack = "btrfs receive {$this->target->path}";
         $snapFileName = basename($snapNameFull).'.btrfs';
 
-        if(count($this->getSnapList())>1)
+        if(count($this->getSnapList())>1 && !($this->forceFullDump))
         {
             $snapNameParentFull = $this->getSnapName(-2);
 

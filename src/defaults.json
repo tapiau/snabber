@@ -1,0 +1,18 @@
+{
+  "aaa":{
+    "source":"/tmp",
+    "target":"ssh://user@host:port/target/path/",
+    "snap": {
+      "dir": ".snap",
+      "state": ".snap.state"
+    }
+  },
+  "bbb":{
+    "source":"/tmp/test1"
+  },
+  "ccc":{
+    "source":"/tmp/test2",
+    "snapDir":"/tmp/snap",
+    "target":"/tmp/snapFiles"
+  }
+}
