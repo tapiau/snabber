@@ -15,6 +15,8 @@ class BtrfsSnapper
     public $snapDir = null;
     public $snapName;
     public $forceFullDump = false;
+    /** @var SnapperConfig */
+    public $config;
 
     public function setSource($string)
     {
@@ -30,6 +32,16 @@ class BtrfsSnapper
             throw new Exception("Source does not exists!");
         }
     }
+    public function setConfig(SnapperConfig $config)
+	{
+		$this->config = $config;
+		
+		$this->setSource($this->config->source);
+		$this->setTarget($this->config->target);
+		$this->setSnapDir($this->config->snapDir);
+		
+		return $this;
+	}
     public function setSnapDir($string)
     {
         if(substr($string,0,1)=='/')

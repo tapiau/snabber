@@ -27,7 +27,7 @@ if(array_key_exists('h',$opts) || array_key_exists('help',$opts))
 }
 
 $configName = '.btrfsSnapper.conf';
-$configLocations = [
+$configLocationList = [
     $configName,
     $_SERVER['HOME']."/{$configName}",
     "/etc/btrfsSnapper"
@@ -35,34 +35,38 @@ $configLocations = [
 
 if(array_key_exists('c',$opts) || array_key_exists('config',$opts))
 {
-    $configLocations = [];
+    $configLocationList = [];
 
     if(array_key_exists('c',$opts))
     {
         $configLocation = $opts['c'];
-        if(!is_array($configLocation))
-        {
-            $configLocation = [$configLocation];
-        }
-        $configLocations = array_merge($configLocations,$configLocation);
+
+        $configLocationList = array_merge(
+        	$configLocationList,
+			!is_array($configLocation)
+				?[$configLocation]
+				:$configLocation
+		);
     }
     if(array_key_exists('config',$opts))
     {
         $configLocation = $opts['config'];
-        if(!is_array($configLocation))
-        {
-            $configLocation = [$configLocation];
-        }
-        $configLocations = array_merge($configLocations,$configLocation);
+
+        $configLocationList = array_merge(
+        	$configLocationList,
+			!is_array($configLocation)
+				?[$configLocation]
+				:$configLocation
+		);
     }
 }
 
-while($configFile = array_shift($configLocations))
+while($configFile = array_shift($configLocationList))
 {
     echo "Checking {$configFile} ... ";
     if(file_exists($configFile))
     {
-        $configList = json_decode(file_get_contents($configFile));
+        $configList = json_decode(file_get_contents($configFile),true);
         echo "OK".PHP_EOL;
         break;
     }
@@ -84,6 +88,9 @@ if(!is_array($configList))
 
 foreach($configList as $config)
 {
+	/** @var SnapperConfig $config */
+	$config = ConfigBuilder::fromArray("SnapperConfig",$config);
+	
     $snap = new BtrfsSnapper();
     $snap->setSource($config->source);
     if(isset($config->target))
